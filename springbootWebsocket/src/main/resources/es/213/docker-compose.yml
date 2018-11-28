@@ -1,0 +1,65 @@
+version: '2'
+services:
+  es:
+    image: elasticsearch:latest
+    container_name: 213es00container
+    hostname: 213es00
+    environment:
+      - ES_JAVA_OPTS=-Xms5g -Xmx5g
+      - MASTER=false
+      - DATA=true
+      - INGEST=false
+      - TCP_PORT=9300
+      - HOST_IP=10.67.1.213
+      - GROUP=es-01
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 655360
+        hard: 655360
+    mem_limit: 30g
+    volumes:
+      - /usr/local/bin/data:/usr/share/elasticsearch/data
+      - /usr/local/bin/logs:/usr/share/elasticsearch/logs
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - esnet
+  es1:
+    image: elasticsearch:latest
+    container_name: 213es01container
+    hostname: 213es01
+    environment:
+      - ES_JAVA_OPTS=-Xms5g -Xmx5g
+      - MASTER=false
+      - DATA=true
+      - INGEST=false
+      #TCP_PORT端口不能使用9300 会与es的9300冲突，这个端口是告诉集群连接MASTER/DATA节点通信的端口
+      - TCP_PORT=9301
+      - HOST_IP=10.67.1.213
+      - GROUP=es-01
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 655360
+        hard: 655360
+    mem_limit: 30g
+    volumes:
+      - /usr/local/bin/data:/usr/share/elasticsearch/data
+      - /usr/local/bin/logs:/usr/share/elasticsearch/logs
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - 9201:9200
+      - 9301:9301  # 此处不能用9300，需与对应的elasticsearch保持一致
+    networks:
+      - esnet
+
+
+networks:
+  esnet:

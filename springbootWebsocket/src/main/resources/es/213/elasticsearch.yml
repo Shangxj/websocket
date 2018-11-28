@@ -1,0 +1,39 @@
+cluster.name: my-test
+node.name: ${HOSTNAME}
+node.master: ${MASTER}
+node.data: ${DATA}
+node.ingest: ${INGEST}
+node.attr.rack: ${GROUP}
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
+bootstrap.memory_lock: true
+network.host: 0.0.0.0
+network.publish_host: ${HOST_IP}
+http.port: 9200
+transport.tcp.port: ${TCP_PORT}
+discovery.zen.ping.unicast.hosts: ['10.67.1.214:9300','10.67.1.212:9300']
+discovery.zen.minimum_master_nodes: 2
+gateway.recover_after_nodes: 4
+action.destructive_requires_name: true
+
+#  数据均衡 任务数
+cluster.routing.allocation.cluster_concurrent_rebalance: 24
+#  重启时，主分片恢复 任务数
+cluster.routing.allocation.node_initial_primaries_recoveries: 24
+#  重启时，副节点恢复 任务数
+cluster.routing.allocation.node_concurrent_recoveries: 24
+#  副本恢复 最大带宽
+indices.recovery.max_bytes_per_sec: 0
+#  磁盘写入最大速度
+indices.store.throttle.max_bytes_per_sec: 0
+
+#thread_pool set
+thread_pool.bulk.queue_size: 1000
+thread_pool.bulk.size: 13
+
+thread_pool.get.size: 13
+
+thread_pool.index.size: 13
+thread_pool.index.queue_size: 1000
+
+indices.memory.index_buffer_size: 30%
