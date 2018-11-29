@@ -9,16 +9,22 @@
     // connection gets bumped over to WebSocket consumers
     socket = new WebSocket("ws://127.0.0.1:8000/chat/");
     socket.onmessage = function (e) {
-        consoe.log(e.data);
+        console.log(e.data);
     };
     socket.onopen = function () {
+        console.log("hello world");
         socket.send("hello world");
     };
     // Call onopen directly if socket is already open
-    if (socket.readyState == WebSocket.OPEN) socket.onopen();
+    if (socket.readyState == WebSocket.OPEN) {
+        socket.onopen();
+    }
 
 </script>
 <body>
+<h2>
+    index
+</h2>
 
 </body>
 </html>

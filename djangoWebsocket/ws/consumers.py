@@ -5,28 +5,38 @@ from dircache import cache
 
 from channels import Group
 # Connected to websocket.connect
+from channels.auth import channel_session_user_from_http, channel_session_user
 from channels.generic.websockets import WebsocketConsumer
 from channels.handler import AsgiRequest
 
+from ws.ws_authentication import token_authenticate
 
+
+# Connected to websocket.connect
+@channel_session_user_from_http
 def ws_add(message):
-    # Accept the connection
+    # Accept connection
     message.reply_channel.send({"accept": True})
-    # Add to the chat group
-    Group("chat").add(message.reply_channel)
+    print "------------------ws_add-------------------------------"
+    # Add them to the right group
+    Group("chat-%s" % message.user.username[0]).add(message.reply_channel)
+
 
 # Connected to websocket.receive
+@channel_session_user
 def ws_message(message):
+    print "[user] %s" % message.content['text']
     Group("chat").send({
         "text": "[user] %s" % message.content['text'],
-    })
+    }
+    )
 
 # Connected to websocket.disconnect
 def ws_disconnect(message):
     Group("chat").discard(message.reply_channel)
 
 
-class MyConsumer(WebsocketConsumer):
+class ChatServer(WebsocketConsumer):
     # 如果你想使用channel_session或者channel_session_user，那么只要在类中设置
     channel_session_user = True
 

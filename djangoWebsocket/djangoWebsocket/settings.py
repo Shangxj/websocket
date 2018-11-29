@@ -27,7 +27,7 @@ SECRET_KEY = '&(nq$-e=w7+)9^6649vcuaw1lxci0)+&u=hu*)^42f+@h-$b6g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -47,7 +47,7 @@ CHANNEL_LAYERS = {
                     "hosts": [os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/2')],
                 },
                 # 配置路由的路径
-                "ROUTING": "ws.routing.channel_routing",
+                "ROUTING": "ws.router.channel_routing",
                 },
 }
 
